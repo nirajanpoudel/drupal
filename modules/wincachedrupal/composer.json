@@ -1,0 +1,9 @@
+{
+    "name": "drupal/wincachedrupal",
+    "description": "Drupal wincache integration",
+    "type": "project",
+    "minimum-stability": "stable",
+    "require": {
+        "drupalonwindows/netphp": "2.x-dev"
+    }
+}

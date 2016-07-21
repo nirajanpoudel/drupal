@@ -1,0 +1,35 @@
+services:
+  cache.backend.wincache:
+    class: Drupal\wincachedrupal\Cache\WincacheBackendFactory
+    arguments: ['@app.root', '@site.path', '@cache_tags.invalidator.checksum']
+  cache.rawbackend.wincache:
+    class: Drupal\wincachedrupal\Cache\WincacheRawBackendFactory
+    arguments: ['@app.root', '@site.path']
+  keyvalue.wincache:
+    class: Drupal\wincachedrupal\KeyValueStorage\KeyValueWincacheFactory
+    arguments: ['@serialization.phpserialize', '@database']
+  keyvalue.expirable.wincache:
+    class: Drupal\wincachedrupal\wincachedrupal\KeyValueWincacheExpirableFactory
+    arguments: ['@serialization.phpserialize', '@database']
+  wincachedrupal.eventsubscriber:
+    class: Drupal\wincachedrupal\EventSubscriber
+    tags:
+      - { name: event_subscriber }
+  wincache.js.optimizer:
+    class: Drupal\wincachedrupal\Asset\JsOptimizer
+    arguments: ['@netphp']
+  wincache.css.optimizer:
+    class: Drupal\wincachedrupal\Asset\CssOptimizer
+    arguments: ['@netphp']
+  wincache.asset.css.collection_optimizer:
+    class: Drupal\wincachedrupal\Asset\CssCollectionOptimizer
+    arguments: [ '@asset.css.collection_grouper', '@asset.css.optimizer', '@asset.css.dumper', '@state', '@netphp']
+  wincache.asset.js.collection_optimizer:
+    class: Drupal\wincachedrupal\Asset\JsCollectionOptimizer
+    arguments: [ '@asset.js.collection_grouper', '@asset.js.optimizer', '@asset.js.dumper', '@state', '@netphp']
+  netphp:
+    class: Drupal\wincachedrupal\NetPhp
+
+
+
+     

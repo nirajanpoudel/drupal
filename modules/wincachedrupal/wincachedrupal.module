@@ -1,0 +1,22 @@
+<?php
+
+function wincachedrupal_cron() {
+  $keyvalue = Drupal::keyValue('wincachedrupal');
+  $lastrun = $keyvalue->get('cron_last_run', 0);
+  if (time() - $lastrun < (3600 * 24)) {
+    return;
+  }
+  // The NetPhp runtime has an internal cron for cleanup tasks...
+  /** @var \Drupal\wincachedrupal\NetPhp */
+  $netphp = \Drupal::service('netphp');
+  if ($netphp->hasNetPhpSupport() === TRUE) {
+    try {
+      $netphp->getRuntime()->Cron();
+    }
+    catch (\Exception $e) {
+
+    }
+  }
+
+  $keyvalue->set('cron_last_run', time());
+}
