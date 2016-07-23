@@ -74,11 +74,20 @@ class Schema extends DatabaseSchema {
    */
   public function DrupalSpecificFunctions() {
     static $cache;
-    if (!isset($cache)) {
-      $cache = ['SUBSTRING','SUBSTRING_INDEX','GREATEST','MD5','LPAD','GROUP_CONCAT','IF','CONNECTION_ID'];
-      // Since SQL Server 2012 (11), there is a native CONCAT implementation
-      $version = $this->connection->Scheme()->EngineVersion()->Version();
-      if (version_compare($version, '11', '<')) {
+    if (empty($cache)) {
+      $cache = array(
+      'SUBSTRING',
+      'SUBSTRING_INDEX',
+      'GREATEST',
+      'MD5',
+      'LPAD',
+      'GROUP_CONCAT',
+      'IF',
+      'CONNECTION_ID'
+    );
+      // Since SQL Server 2012 (11), there
+      // is a native CONCAT implementation
+      if ($this->connection->Scheme()->EngineVersionNumber() < 11) {
         $cache[] = 'CONCAT';
       }
     }

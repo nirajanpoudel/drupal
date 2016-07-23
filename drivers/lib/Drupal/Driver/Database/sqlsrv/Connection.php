@@ -601,17 +601,20 @@ class Connection extends DatabaseConnection {
     }
     // Force quotes around some SQL Server reserved keywords.
     if (preg_match('/^SELECT/i', $query)) {
-      $query = preg_replace_callback(self::RESERVED_REGEXP, [$this, 'replaceReservedCallback'], $query);
+      $query = preg_replace_callback(self::RESERVED_REGEXP, array($this, 'replaceReservedCallback'), $query);
     }
     // Last chance to modify some SQL Server-specific syntax.
-    $replacements = [];
+    $replacements = array();
     // Add prefixes to Drupal-specific functions.
     $defaultSchema = $this->schema()->GetDefaultSchema();
     foreach ($this->schema()->DrupalSpecificFunctions() as $function) {
       $replacements['/\b(?<![:.])(' . preg_quote($function) . ')\(/i'] =  "{$defaultSchema}.$1(";
     }
     // Rename some functions.
-    $funcs = ['LENGTH' => 'LEN', 'POW' => 'POWER'];
+    $funcs = array(
+      'LENGTH' => 'LEN',
+      'POW' => 'POWER',
+    );
     foreach ($funcs as $function => $replacement) {
       $replacements['/\b(?<![:.])(' . preg_quote($function) . ')\(/i'] = $replacement . '(';
     }
